@@ -4,80 +4,95 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.SelectionQuery;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class StudentDao {
 
-    public static void save(Student student) {
+    private static final Logger logger = LoggerFactory.getLogger(StudentDao.class);
+    private static SessionFactory sessionFactory;
 
-        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        session.persist(student);
-        transaction.commit();
-        session.close();
-
+    public StudentDao() {
+        sessionFactory = HibernateUtil.getSessionFactory();
     }
 
-    public static void update(Student student, int id) {
-
-        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-
-        Student studentTemp = session.get(Student.class,id);
-        studentTemp.setName(student.getName());
-        studentTemp.setHeight(student.getHeight());
-
-        session.merge(studentTemp);
-
-        transaction.commit();
-        session.close();
-
-    }
-
-    public static void getAllStudents() {
-
-        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        Session session = sessionFactory.openSession();
-        SelectionQuery<Student> query = session.createSelectionQuery("FROM Student", Student.class);
-
-        List<Student> studentList = query.list();
-
-        for (Student student : studentList) {
-            System.out.println(student);
+    public void save(Student student) {
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            try {
+                session.persist(student);
+                transaction.commit();
+            } catch (Exception e) {
+                transaction.rollback();
+                logger.error("Failed to save student: {}", student, e);
+            }
+        } catch (Exception e) {
+            logger.error("Failed to open session for saving student: {}", student, e);
         }
-
-        session.close();
-
     }
 
-    public static Student getById(int id) {
-
-        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        Session session = sessionFactory.openSession();
-        Student student = session.get(Student.class,id);
-        session.close();
-        return student;
-
-    }
-
-    public static void deleteById(int id) {
-
-        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        Student student = session.get(Student.class,id);
-        if (student != null) {
-            session.remove(student);
-            transaction.commit();
-        } else {
-            System.out.println("This student cannot be found in data base");
+    public void update(Student student, int id) {
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            try {
+                Student studentTemp = session.get(Student.class, id);
+                if (studentTemp != null) {
+                    studentTemp.setName(student.getName());
+                    studentTemp.setHeight(student.getHeight());
+                    session.merge(studentTemp);
+                    transaction.commit();
+                } else {
+                    logger.warn("Student with ID {} not found for update", id);
+                }
+            } catch (Exception e) {
+                transaction.rollback();
+                logger.error("Failed to update student with ID: {}", id, e);
+            }
+        } catch (Exception e) {
+            logger.error("Failed to open session for updating student with ID: {}", id, e);
         }
+    }
 
-        session.close();
+    public List<Student> getAllStudents() {
+        try (Session session = sessionFactory.openSession()) {
+            SelectionQuery<Student> query = session.createSelectionQuery("FROM Student", Student.class);
+            return query.list();
+        } catch (Exception e) {
+            logger.error("Failed to fetch all students", e);
+            return List.of(); // Return an empty list on failure
+        }
+    }
 
+    public Student getById(int id) {
+        try (Session session = sessionFactory.openSession()) {
+            return session.get(Student.class, id);
+        } catch (Exception e) {
+            logger.error("Failed to fetch student with ID: {}", id, e);
+            return null; // Return null to indicate failure
+        }
+    }
+
+    public void deleteById(int id) {
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            try {
+                Student student = session.get(Student.class, id);
+                if (student != null) {
+                    session.remove(student);
+                    transaction.commit();
+                    logger.info("Student with ID {} successfully deleted", id);
+                } else {
+                    logger.warn("Student with ID {} not found for deletion", id);
+                }
+            } catch (Exception e) {
+                transaction.rollback();
+                logger.error("Failed to delete student with ID: {}", id, e);
+            }
+        } catch (Exception e) {
+            logger.error("Failed to open session for deleting student with ID: {}", id, e);
+        }
     }
 
 }

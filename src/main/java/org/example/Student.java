@@ -52,4 +52,13 @@ public class Student {
         this.height = height;
     }
 
+    // toString
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", height=" + height +
+                '}';
+    }
 }

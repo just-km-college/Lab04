@@ -6,6 +6,8 @@ public class Main {
 
         System.out.print("Hello World!\n");
 
+        StudentDao studentDao = new StudentDao();
+
     }
 
 }
