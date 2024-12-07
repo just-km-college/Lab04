@@ -93,6 +93,25 @@ public class Main {
 
     private static void update() {
 
+        System.out.print("Enter ID of shape that You want to update: ");
+        long id = getChoice();
+
+        if (shapeDao.getById(id) instanceof Triangle shape) {
+            Triangle updatedShape = ShapeFactory.triangleCreator(scanner);
+            shape.setColor(updatedShape.getColor());
+            shape.setBase(updatedShape.getBase());
+            shape.setHeight();
+            shapeDao.update(shape);
+        } else if (shapeDao.getById(id) instanceof Rectangle shape) {
+            Rectangle updatedShape = ShapeFactory.rectangleCreator(scanner);
+            shape.setColor(updatedShape.getColor());
+            shape.setA(updatedShape.getA());
+            shape.setB(updatedShape.getB());
+            shapeDao.update(shape);
+        } else {
+            System.out.println("Shape not found");
+        }
+
     }
 
     private static void delete() {

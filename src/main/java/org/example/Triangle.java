@@ -9,10 +9,10 @@ import jakarta.persistence.Entity;
 public class Triangle extends Shape {
 
     @Column(name = "base")
-    private final double base;
+    private double base;
 
     @Column(name = "height")
-    private final double height;
+    private double height;
 
     public Triangle(Color color, double base) {
         super(color);
@@ -30,6 +30,14 @@ public class Triangle extends Shape {
 
     public double getHeight() {
         return height;
+    }
+
+    public void setBase(double base) {
+        this.base = base;
+    }
+
+    public void setHeight() {
+        this.height = (base * Math.sqrt(3)) / 2;
     }
 
     @Override

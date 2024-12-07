@@ -43,5 +43,4 @@ public class ShapeFactory {
         return new Rectangle(color,a,b);
     }
 
-
 }

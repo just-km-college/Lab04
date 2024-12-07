@@ -12,7 +12,7 @@ public abstract class Shape {
     private long id;
 
     @Embedded
-    private final Color color;
+    private Color color;
 
     public Shape(Color color) {
         this.color = color;
@@ -21,8 +21,16 @@ public abstract class Shape {
     abstract double getArea();
     abstract double getPerimeter();
 
+    public long getId() {
+        return id;
+    }
+
     public Color getColor() {
         return this.color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 
     public String getColorDescription() {

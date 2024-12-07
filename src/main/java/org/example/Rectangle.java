@@ -9,10 +9,10 @@ import jakarta.persistence.Entity;
 public class Rectangle extends Shape {
 
     @Column(name = "a")
-    private final double a;
+    private double a;
 
     @Column(name = "b")
-    private final double b;
+    private double b;
 
     public Rectangle(Color color, double a, double b) {
         super(color);
@@ -30,6 +30,14 @@ public class Rectangle extends Shape {
 
     public double getB() {
         return b;
+    }
+
+    public void setA(double a) {
+        this.a = a;
+    }
+
+    public void setB(double b) {
+        this.b = b;
     }
 
     @Override
@@ -50,4 +58,3 @@ public class Rectangle extends Shape {
                 " " + super.toString();
     }
 }
-
