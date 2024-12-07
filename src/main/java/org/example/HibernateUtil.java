@@ -1,10 +1,7 @@
 package org.example;
 
 import org.hibernate.SessionFactory;
-import org.hibernate.boot.Metadata;
-import org.hibernate.boot.MetadataSources;
-import org.hibernate.boot.registry.StandardServiceRegistry;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,9 +14,7 @@ public class HibernateUtil {
     // Static block is run only once when class is being loaded into memory, it's tied to class rather than instance
     static {
         try {
-            StandardServiceRegistry registry = new StandardServiceRegistryBuilder().configure().build();
-            Metadata metadata = new MetadataSources(registry).getMetadataBuilder().build();
-            sessionFactory = metadata.getSessionFactoryBuilder().build();
+            sessionFactory = new Configuration().configure().buildSessionFactory();
             logger.info("SessionFactory initialized successfully.");
         } catch (Exception e) {
             logger.error("Error initializing SessionFactory: {}", e.getMessage(), e);
