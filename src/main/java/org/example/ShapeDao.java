@@ -14,7 +14,13 @@ public class ShapeDao {
     private static final Logger logger = LoggerFactory.getLogger(ShapeDao.class);
     private static SessionFactory sessionFactory;
 
+    public ShapeDao(String cfg) {
+        HibernateUtil.initializeSessionFactory(cfg);
+        sessionFactory = HibernateUtil.getSessionFactory();
+    }
+
     public ShapeDao() {
+        HibernateUtil.initializeSessionFactory();
         sessionFactory = HibernateUtil.getSessionFactory();
     }
 

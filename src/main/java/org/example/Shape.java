@@ -2,6 +2,8 @@ package org.example;
 
 import jakarta.persistence.*;
 
+import java.util.Scanner;
+
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
@@ -18,6 +20,7 @@ public abstract class Shape {
         this.color = color;
     }
 
+    public abstract Shape update(Scanner scanner);
     abstract double getArea();
     abstract double getPerimeter();
 

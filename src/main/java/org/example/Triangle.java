@@ -4,6 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
+import java.util.Scanner;
+
 @Entity
 @DiscriminatorValue("Triangle")
 public class Triangle extends Shape {
@@ -18,6 +20,25 @@ public class Triangle extends Shape {
         super(color);
         this.base = base;
         this.height = (base * Math.sqrt(3)) / 2;
+    }
+
+    public Shape update(Scanner scanner) {
+
+        System.out.print("Please enter updated base value: ");
+        this.base = scanner.nextDouble();
+        this.height = (base * Math.sqrt(3)) / 2;
+        System.out.print("Please enter updated color values: \nalpha: ");
+        int alpha = scanner.nextInt();
+        System.out.print("red: ");
+        int red = scanner.nextInt();
+        System.out.print("green: ");
+        int green = scanner.nextInt();
+        System.out.print("blue: ");
+        int blue = scanner.nextInt();
+        this.setColor(new Color(alpha,red,green,blue));
+
+        return this;
+
     }
 
     public Triangle() {

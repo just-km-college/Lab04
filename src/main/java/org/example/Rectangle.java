@@ -4,6 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
+import java.util.Scanner;
+
 @Entity
 @DiscriminatorValue("Rectangle")
 public class Rectangle extends Shape {
@@ -38,6 +40,26 @@ public class Rectangle extends Shape {
 
     public void setB(double b) {
         this.b = b;
+    }
+
+    public Shape update(Scanner scanner) {
+
+        System.out.print("Please enter updated a value: ");
+        this.a = scanner.nextDouble();
+        System.out.print("Please enter updated b value: ");
+        this.b = scanner.nextDouble();
+        System.out.print("Please enter updated color values: \nalpha: ");
+        int alpha = scanner.nextInt();
+        System.out.print("red: ");
+        int red = scanner.nextInt();
+        System.out.print("green: ");
+        int green = scanner.nextInt();
+        System.out.print("blue: ");
+        int blue = scanner.nextInt();
+        this.setColor(new Color(alpha,red,green,blue));
+
+        return this;
+
     }
 
     @Override

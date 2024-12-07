@@ -34,6 +34,9 @@ public class Main {
         }
         scanner.close();
         HibernateUtil.shutdown();
+
+        System.out.println("Special thanks to Ukaszoro for update() debugging");
+        
     }
 
     private static void printMenu() {
@@ -96,21 +99,7 @@ public class Main {
         System.out.print("Enter ID of shape that You want to update: ");
         long id = getChoice();
 
-        if (shapeDao.getById(id) instanceof Triangle shape) {
-            Triangle updatedShape = ShapeFactory.triangleCreator(scanner);
-            shape.setColor(updatedShape.getColor());
-            shape.setBase(updatedShape.getBase());
-            shape.setHeight();
-            shapeDao.update(shape);
-        } else if (shapeDao.getById(id) instanceof Rectangle shape) {
-            Rectangle updatedShape = ShapeFactory.rectangleCreator(scanner);
-            shape.setColor(updatedShape.getColor());
-            shape.setA(updatedShape.getA());
-            shape.setB(updatedShape.getB());
-            shapeDao.update(shape);
-        } else {
-            System.out.println("Shape not found");
-        }
+        shapeDao.update(shapeDao.getById(id).update(scanner));
 
     }
 
