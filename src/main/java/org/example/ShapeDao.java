@@ -81,18 +81,15 @@ public class ShapeDao {
     }
 
     public void update(Shape shape) {
+        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            try {
-                session.merge(shape);
-                transaction.commit();
-                logger.info("Shape with ID {} successfully updated", shape.getId());
-            } catch (Exception e) {
-                transaction.rollback();
-                logger.error("Failed to update shape: {}", shape, e);
-            }
+            transaction = session.beginTransaction();
+            session.merge(shape);
+            transaction.commit();
+            logger.info("Shape '{}' updated successfully.", shape);
         } catch (Exception e) {
-            logger.error("Failed to open session for updating shape: {}", shape, e);
+            if (transaction != null) transaction.rollback();
+            logger.error("Failed to update Shape '{}'. Exception: {}", shape, e.getMessage(), e);
         }
     }
 
